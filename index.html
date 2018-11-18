@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="style.css"/>
+    <link href="https://fonts.googleapis.com/css?family=Charmonman|Srisakdi" rel="stylesheet">
 </head>
 <body>
 
     <div class="name-entry-wrapper">
         <h2 class="title-text">Christmas Drawing</h2>
-        <p></p>
         <ul class="names">
-            <li style="font-size: 1.4em;">Enter 'fam' mode or start entering names...</li>
+            <li>Enter 'fam' mode or start entering names.</li>
         </ul>
 
         <form class="add-names">
@@ -21,6 +21,7 @@
             <input type="submit" value="+ Add person">
             <input type="button" name="remove-name" value="Remove Name">
             <input type="button" name="match" value="Match Everyone Up" disabled>
+            <input type="button" name="resetBtn" value="Reset">
         </form>
     </div>
 
@@ -36,7 +37,7 @@
     const addNameBtn = document.querySelector('.add-names');
     const removeNamesBtn = addNameBtn.querySelector('[name=remove-name]');
     const matchUpBtn = addNameBtn.querySelector('[name=match]');
-    const reset = addNameBtn.querySelector('[name=reset]');
+    const reset = addNameBtn.querySelector('[name=resetBtn]');
 
     //ul and results elements
     const nameList = document.querySelector('.names');
@@ -50,10 +51,7 @@
 
     //Add users
     function addName(e){
-
-
         e.preventDefault();
-
         //Input value
         const text = (this.querySelector('[name=name')).value;
         text.trim();
@@ -61,20 +59,21 @@
         //Family Mode
         if(text.toLowerCase() === 'fam' && names.length === 0) {
             familyMode = true;
-            nameList.innerHTML = `<li>Family Mode...Add Names</li>`
+            nameList.innerHTML = `<li>Family Mode. Add Names</li>`
             this.reset();
             return;
         }
         
         //Prevents duplicate names from being entered
-        if(names.length > 0) {
-            if(names.some(name => name.text.toLowerCase() === text.toLowerCase()))
-            return;
-        }
+         if(names.length > 0 && names.some(name => name.text.toLowerCase() === text.toLowerCase())) {
+                alert("Cant enter in duplicate names");
+                return;
+           }
+
 
         //Create user
         const name = {
-            text: familyMode ? text.substring(text.length - 1, 0) : text,
+            text: text,
             checked: false,
             family: familyMode ? text.substr(-1).toLowerCase() : ''
         };
@@ -85,12 +84,12 @@
         //create the li elements
         populateList(names, nameList);
 
-        //Only enable match up with even number of people
+        //Only enable match up btn with even number of people
         matchUpBtn.disabled = names.length % 2 !== 0 ? true : false; 
 
         //reset input field.
+        console.log(this);
         this.reset();
-
     }
 
     //Remove checked users
@@ -98,58 +97,60 @@
         const uncheckedkNames = names.filter(name => name.checked === false);
         names = [];
         names = [...uncheckedkNames];
-         populateList(names, nameList);
+        populateList(names, nameList);
     }
 
 
     //Match users up
     function matchNames(e) {
-
         let namesCopy1 = [...names];
         let namesCopy2 = [...names];
         namesCopy1 = shuffle(namesCopy1);
         namesCopy2 = shuffle(namesCopy2);
 
-
         if(familyMode === true){
 
-
-        function isSameFamily(el, index, arr) {
-         if (index === 0){
-            return true;
-         }
-         else {
-            return (el.answer === arr[index - 1].answer);
-        }
-      }
+            function isSameFamily(el, index, arr) {
+                if (index === 0){
+                    return true;
+                }
+                else {
+                    return (el.family === arr[index - 1].family);
+                }
+            }    
 
             const matchedArray = [];
-            while(namesCopy1.every(isSameFamily))
+            while(namesCopy1.length > 0 && !(namesCopy1.every(isSameFamily)))
             {
-               
-                if(namesCopy1[0].family !== namesCopy2[0].family){
-                 console.log('hello');
+                if(namesCopy1[0].family !== namesCopy2[0].family
+                    && namesCopy1[namesCopy1.length - 1].text !== namesCopy2[namesCopy2.length - 1].text){
                     const name1 = namesCopy1.shift();
                     const name2 = namesCopy2.shift();                
                     matchedArray.push(name1);
                     matchedArray.push(name2);
                 }
                 else {
-                    console.log('hello00000');
                     shuffle(namesCopy1);
                     shuffle(namesCopy2);
                 }
             }
-          
+
             if(namesCopy1.length > 0){
-               for(let i = 0; i < namesCopy1.length; i++) {
-                const name1 = namesCopy1.shift();
+                console.table(namesCopy1);
+                console.table(matchedArray);
+               let length = namesCopy1.length;
+               for(let i = 0; i < length; i++) {
+                while(namesCopy1[0].text === namesCopy2[0].text || namesCopy1[namesCopy1.length - 1].text === namesCopy2[namesCopy2.length -1].text)
+                {
+                    shuffle(namesCopy1);
+                    shuffle(namesCopy2);
+                }
+                const name1 = namesCopy1.shift()
                 const name2 = namesCopy2.shift();                
                 matchedArray.push(name1);
                 matchedArray.push(name2);
                }
             }
-
             populateTable(matchedArray);
         }
         else {
@@ -159,7 +160,7 @@
             while(namesCopy1.length > 0) 
             {
                 //Prevent user from matching up with themselves
-                if(namesCopy1[0].text !== namesCopy2[0].text){
+                if(namesCopy1[0].text !== namesCopy2[0].text && namesCopy1[namesCopy1.length - 1].text !== namesCopy2[namesCopy2.length - 1].text){
                     const name1 = namesCopy1.shift();
                     const name2 = namesCopy2.shift();                
                     matchedArray.push(name1);
@@ -176,6 +177,17 @@
         }
     }
 
+    //reset form
+
+    function resetAll() {
+        names = [];
+        familyMode = false;
+        nameList.innerHTML = `<li>Enter 'fam' mode or start entering names.</li>`
+        results.innerHTML = '';
+        results.style.display = 'none';
+
+    }
+
     //check and uncheck a users name
     function toggleChecked(e) {
         if(!e.target.matches('input')) return;
@@ -189,7 +201,7 @@
     //Add users to the list
     function populateList(names = [], nameList) {
         if(names.length == 0) {
-        nameList.innerHTML = `<li>Enter 'fam' mode or start entering names...</li>`;
+        nameList.innerHTML = `<li>Enter 'fam' mode or start entering names.</li>`;
         return;
         }
         nameList.innerHTML = names.map((name, i) => {
@@ -219,13 +231,13 @@
 
         for(let i = 0; i < matchedArray.length; i += 2)
         {
-            console.log(i);
+            //console.log(i);
             let tr = document.createElement('tr');
             let td1 = document.createElement('td');
             let td2 = document.createElement('td');
             
-            let text1 = document.createTextNode(matchedArray[i].text);
-            let text2 = document.createTextNode(matchedArray[i + 1].text);
+            let text1 = document.createTextNode(familyMode ? (matchedArray[i].text).slice(0 ,(matchedArray[i].text).length - 2) : matchedArray[i].text);
+            let text2 = document.createTextNode(familyMode ? (matchedArray[i + 1].text).slice(0 ,(matchedArray[i + 1].text).length - 2) : matchedArray[i + 1].text);
 
             td1.appendChild(text1);
             td2.appendChild(text2);
@@ -234,8 +246,10 @@
               
             table.appendChild(tr);
         }
-
+        
+        results.style.display = 'block';
         results.append(table);
+        
 
     }
 
@@ -251,6 +265,7 @@
     addNameBtn.addEventListener('submit', addName);
     removeNamesBtn.addEventListener('click', removeNames);
     matchUpBtn.addEventListener('click', matchNames);
+    reset.addEventListener('click', resetAll);
     nameList.addEventListener('click', toggleChecked);
 
 

@@ -1,7 +1,8 @@
 html {
     box-sizing: border-box;
     min-height: 100vh;
-    background-color: lightblue;
+    background: url('christmas-bg.jpg');
+    background-size: 100% auto;
     font-family: Futura,"Trebuchet MS",Arial,sans-serif;
 }
 
@@ -15,15 +16,20 @@ html {
 
   .name-entry-wrapper {
       max-width: 500px;
-      background: rgba(255,255,255,0.95);
-      box-shadow: 0 0 0 15px rgba(0,0,0,0.1);
-      margin: 0 auto;
+      background: rgb(255, 255, 255);
+      box-shadow: 0 0 0 15px rgba(20, 199, 223, 0.9);
+      margin: 50px auto;
   }
 
   /*h2*/
   .title-text {
+    font-family: 'Srisakdi', cursive;
+    font-family: 'Charmonman', cursive;
     text-align: center;
-    padding: 20px 0px;
+    font-size: 2em;
+    padding-top: 10px;
+    margin: 0;
+
     
   }
 
@@ -46,8 +52,12 @@ html {
 
   }
 
+  span {
+      margin-left: 10px;
+  }
+
   .names li input {
-      border: 1px solid blue;
+      border: 20px solid blue;
   }
 
   .names li label {
@@ -71,14 +81,14 @@ html {
   }
 
   .add-names input[name='name'] {
-      flex: 1 0 100%;
+      flex: 1 1 100%;
       border-top: none;
       border-bottom: 1px solid rgba(0,0,0,0.1);
       margin-top: 2px;
     
   }
 
-  .add-names input:nth-last-child(-n+3) {
+  .add-names input:nth-last-child(-n+4) {
       margin: 10px;
       flex: 1;
   }
@@ -89,14 +99,17 @@ html {
       border: 1px solid blue;
       margin-top: 10px;
   }
+
   input[name="match"] {
       padding: 10px;
   }
 
   .results-wrapper {
-      background: rgba(255,255,255,0.95);
+      background: rgba(255,255,255,1);
+      box-shadow: 0 0 0 15px rgba(20, 199, 223, 0.9);
       max-width: 800px;
-      margin: 30px auto;
+      margin: 50px auto;
+      display: none;
   }
 
   table {

@@ -2,7 +2,9 @@ html {
     box-sizing: border-box;
     min-height: 100vh;
     background: url('christmas-bg.jpg');
-    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
     font-family: Futura,"Trebuchet MS",Arial,sans-serif;
 }
 
@@ -19,6 +21,7 @@ html {
       background: rgb(255, 255, 255);
       box-shadow: 0 0 0 15px rgba(20, 199, 223, 0.9);
       margin: 50px auto;
+      
   }
 
   /*h2*/
